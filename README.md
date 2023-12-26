@@ -1,5 +1,7 @@
 # Cache Manager Flutter
-Cache Manager using GetStorage with time expiration
+Cache Manager using GetStorage with time expiration.
+
+This is based on @[ozkayas](https://github.com/ozkayas/auth_manager)'s code.
 
 ## Used Packages
 
@@ -27,7 +29,7 @@ flutter pub add get_storage
 To use, you just have to declare the class like this:
 
 ```
-class ...Manager extends GetxController with CacheManager { 
+class ... extends GetxController with CacheManager { 
 
 }
 ```
