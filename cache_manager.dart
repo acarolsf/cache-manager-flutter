@@ -16,6 +16,7 @@ class CacheValue {
     lastSaved = DateTime.parse(json['lastSaved'].toString());
 }
 mixin CacheManager {
+  // Save values locally
   Future<bool> saveValue(dynamic value, CacheManagerKey onKey) async {
     final box = GetStorage();
     final valueToCache = CacheValue(value: value, lastSaved: DateTime.now());
@@ -23,35 +24,39 @@ mixin CacheManager {
     return true;
   }
 
+  // Read the value according to a key
   CacheValue? getValueFrom(CacheManagerKey key) {
     final box = GetStorage(); 
     final savedValue = box.read(key.toString());
     return savedValue == null ? null : CacheValue.fromJson(savedValue);
   }
 
+  // Remove the value according to a key
   Future<void> removeValueFrom(CacheManagerKey key) async {
     final box = GetStorage();
     await box.remove(key.toString());
   }
 
+  // Remove all values saved locally
   Future<void> removeAllCacheData() async {
     final box = GetStorage();
     await box.erase();
   }
 
-  bool isValid(int time, TimeValid timeValid, DateTime lastTime) {
-    switch (timeValid) {
-      case TimeValid.inDays:
+  // Validate based on expiration time
+  bool isValid(ExpirationTime expiration, int time, DateTime lastTime) {
+    switch (expiration) {
+      case ExpirationTime.inDays:
         return (lastTime.difference(DateTime.now()).inDays > time);
-      case TimeValid.inHours:
+      case ExpirationTime.inHours:
         return (lastTime.difference(DateTime.now()).inHours > time);
-      case TimeValid.inSeconds:
+      case ExpirationTime.inSeconds:
         return (lastTime.difference(DateTime.now()).inSeconds > time);
     }
   }
 }
 
-enum TimeValid {
+enum ExpirationTime {
   inDays,
   inHours,
   inSeconds;
